@@ -34,9 +34,22 @@ int main(int argc, char* argv[]) {
 
   // Vertices of the figuere we want to render
   GLfloat vertices[] = {
-    -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-    0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-    0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f
+    -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,  // bottom left vertice
+    0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // bottom right vertice
+    0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // upper right vertice
+
+
+    /*
+    -0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, // inner left vertice
+    0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,  // inner right vertice
+    0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f      // inner down vertice
+    */
+  };
+
+  GLuint indices[] = {
+    0, 3, 5,  // lower left triangle
+    3, 2, 4,  // lower right triangle
+    5, 4, 1   // upper triangle
   };
 
 
@@ -78,22 +91,26 @@ int main(int argc, char* argv[]) {
 
 
   // Create and initilize Vertex Arrays Object ande Vertex Buffer Object (the order is important)
-  GLuint VAO, VBO;  // create references to the VAO and VBO
+  GLuint VAO, VBO, EBO;  // create references to the VAO and VBO
 
   glGenVertexArrays(1, &VAO); // generate the VAO
   glGenBuffers(1, &VBO); // generate the VBO
+  glGenBuffers(1, &EBO);
 
   glBindVertexArray(VAO); // bind the VAO to the current context
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO); // bind the VBO to the current context
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // load the vertex data to the VBO
 
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0); //  configure the VAO, this funtion help to  communicate with the shaders
   glEnableVertexAttribArray(0);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind the VBO
   glBindVertexArray(0); // unbind the VAO
-
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 
   // Change background color
@@ -108,7 +125,7 @@ int main(int argc, char* argv[]) {
     glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(shaderProgram);
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3); // draw to the back screen buffer
+    glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 
 
     glfwSwapBuffers(window);  // swap screen buffers  to  refresh the window
@@ -119,6 +136,7 @@ int main(int argc, char* argv[]) {
 
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);
+  glDeleteBuffers(1, &EBO);
   glDeleteProgram(shaderProgram);
 
 
