@@ -1,5 +1,4 @@
 #pragma once
-
 #include <glad/glad.h>
 
 class VBO 
@@ -11,4 +10,4 @@ class VBO
     void Bind();
     void Unbind();
     void Delete();
-}
+};
