@@ -46,6 +46,11 @@ add_library("VBO" "${INCLUDE_DIR}/VBO.h" "${INCLUDE_DIR}/VBO.cpp")
 target_include_directories("VBO" PRIVATE "${GLAD_DIR}/include")
 target_link_libraries(${PROJECT_NAME} "VBO")
 
+# VAO -----------------------------
+add_library("VAO" "${INCLUDE_DIR}/VAO.h" "${INCLUDE_DIR}/VAO.cpp")
+target_include_directories("VAO" PRIVATE "${GLAD_DIR}/include")
+target_link_libraries(${PROJECT_NAME} "VAO")
+
 
 # Resources ------------------------------
 #Shaders -------------
