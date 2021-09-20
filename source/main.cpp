@@ -3,24 +3,11 @@
 
 #include <iostream>
 #include <cmath>
+#include <fstream>
+#include <string>
+#include "shader.h"
 
-// Shaders sources
 
-// Vertex  shader source
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-" gl_Position =  vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\n\0"; 
-
-// Fragment shader source
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-" FragColor =  vec4(0.8f, 0.3f, 0.02f, 1.0f);\n"
-"}\n\0"; 
 
 
 
@@ -36,8 +23,8 @@ int main(int argc, char* argv[]) {
   GLfloat vertices[] = {
     -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,  // bottom left vertice
     0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // bottom right vertice
-    0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // upper right vertice
-
+    0.5f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // upper right vertice
+    -0.5f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // upper left vertice
 
     /*
     -0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, // inner left vertice
@@ -52,7 +39,10 @@ int main(int argc, char* argv[]) {
     5, 4, 1   // upper triangle
   };
 
-
+  GLuint squareIndices[] = {
+    0, 1, 2,
+    0, 2, 3
+  };
 
   // Create window, if failed terminate program
   GLFWwindow* window = glfwCreateWindow(800, 800, "OpenGL", NULL, NULL);
@@ -69,25 +59,11 @@ int main(int argc, char* argv[]) {
   // Set viewport
   glViewport(0, 0, 800, 800);
 
+  char* vertexShaderPath = "../resources/shaders/default.vert";
+  char* fragmentShaderPath = "../resources/shaders/default.frag";
 
-  // Creates a vertex shader
-  GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER); // Creates a reference to a GL_VERTEX_SHADER
-  glShaderSource(vertexShader, 1, &vertexShaderSource, NULL); // Link the shader to the shader source
-  glCompileShader(vertexShader);  // Compile the shader for use in the GL context
-
-  GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-  glCompileShader(fragmentShader);
-
-  GLuint shaderProgram = glCreateProgram(); // Creates a shader program, it bundles the shaders
-  glAttachShader(shaderProgram, vertexShader);  
-  glAttachShader(shaderProgram, fragmentShader);
-  glLinkProgram(shaderProgram); // Link the shader program to the GL context
-
-  // Delete shaders, the functionality of  these is safe in the shader program
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
-
+  Shader shader(vertexShaderPath, fragmentShaderPath);
+  
 
 
   // Create and initilize Vertex Arrays Object ande Vertex Buffer Object (the order is important)
@@ -103,7 +79,7 @@ int main(int argc, char* argv[]) {
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // load the vertex data to the VBO
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(squareIndices), squareIndices, GL_STATIC_DRAW);
 
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0); //  configure the VAO, this funtion help to  communicate with the shaders
   glEnableVertexAttribArray(0);
@@ -123,9 +99,9 @@ int main(int argc, char* argv[]) {
   while(!glfwWindowShouldClose(window)) {
     glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glUseProgram(shaderProgram);
+    shader.Activate();
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 
     glfwSwapBuffers(window);  // swap screen buffers  to  refresh the window
@@ -137,7 +113,7 @@ int main(int argc, char* argv[]) {
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);
   glDeleteBuffers(1, &EBO);
-  glDeleteProgram(shaderProgram);
+  shader.Delete();
 
 
   // Terminate program
