@@ -1,6 +1,6 @@
 # Project definition
 cmake_minimum_required(VERSION 3.1)
-project(InitGL)
+project(InitGL C CXX)
 
 # Source files
 set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/source")
@@ -11,6 +11,7 @@ set(SOURCES "${SRC_DIR}/main.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE "${SRC_DIR}")
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
+
 
 # GLFW
 set(GLFW_DIR "${LIB_DIR}/glfw")
@@ -29,3 +30,25 @@ add_library("glad" "${GLAD_DIR}/src/glad.c")
 target_include_directories("glad" PRIVATE "${GLAD_DIR}/include")
 target_include_directories(${PROJECT_NAME} PRIVATE "${GLAD_DIR}/include")
 target_link_libraries(${PROJECT_NAME} "glad" "${CMAKE_DL_LIBS}")
+
+
+# User defined classes --------------------------------------
+set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(${PROJECT_NAME} PRIVATE "${INCLUDE_DIR}")
+
+# Shaders -------------------------
+add_library("shader" "${INCLUDE_DIR}/shader.h" "${INCLUDE_DIR}/shader.cpp")
+target_include_directories("shader" PRIVATE "${GLAD_DIR}/include")
+target_link_libraries(${PROJECT_NAME} "shader")
+
+# VBO -----------------------------
+add_library("VBO" "${INCLUDE_DIR}/VBO.h" "${INCLUDE_DIR}/VBO.cpp")
+target_include_directories("VBO" PRIVATE "${GLAD_DIR}/include")
+target_link_libraries(${PROJECT_NAME} "VBO")
+
+
+# Resources ------------------------------
+#Shaders -------------
+set(SHADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/resources/shaders")
+configure_file("${SHADERS_DIR}/default.vert" "${CMAKE_CURRENT_BINARY_DIR}/resources/shaders/default.vert" COPYONLY)
+configure_file("${SHADERS_DIR}/default.frag" "${CMAKE_CURRENT_BINARY_DIR}/resources/shaders/default.frag" COPYONLY)
