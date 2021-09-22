@@ -51,6 +51,10 @@ add_library("VAO" "${INCLUDE_DIR}/VAO.h" "${INCLUDE_DIR}/VAO.cpp")
 target_include_directories("VAO" PRIVATE "${GLAD_DIR}/include")
 target_link_libraries(${PROJECT_NAME} "VAO")
 
+# EBO -----------------------------
+add_library("EBO" "${INCLUDE_DIR}/EBO.h" "${INCLUDE_DIR}/EBO.cpp")
+target_include_directories("EBO" PRIVATE "${GLAD_DIR}/include")
+target_link_libraries(${PROJECT_NAME} "EBO")
 
 # Resources ------------------------------
 #Shaders -------------
