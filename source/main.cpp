@@ -7,8 +7,8 @@
 #include <string>
 #include "shader.h"
 
-#include "VAO.h"
 #include "VBO.h"
+#include "VAO.h"
 #include "EBO.h"
 
 
@@ -69,22 +69,18 @@ int main(int argc, char* argv[]) {
 
 
   // Create and initilize Vertex Arrays Object ande Vertex Buffer Object (the order is important)
-  GLuint VAO, VBO;  // create references to the VAO and VBO
-
+  GLuint VAO;  // create references to the VAO and VBO
   glGenVertexArrays(1, &VAO); // generate the VAO
-  glGenBuffers(1, &VBO); // generate the VBO
 
   glBindVertexArray(VAO); // bind the VAO to the current context
 
-  glBindBuffer(GL_ARRAY_BUFFER, VBO); // bind the VBO to the current context
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); // load the vertex data to the VBO
-
+  VBO VBO01(vertices, sizeof(vertices));
   EBO EBO01(squareIndices, sizeof(squareIndices));
 
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0); //  configure the VAO, this funtion help to  communicate with the shaders
   glEnableVertexAttribArray(0);
 
-  glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind the VBO
+  VBO01.Unbind();
   glBindVertexArray(0); // unbind the VAO
   EBO01.Unbind();
 
@@ -111,7 +107,7 @@ int main(int argc, char* argv[]) {
 
 
   glDeleteVertexArrays(1, &VAO);
-  glDeleteBuffers(1, &VBO);
+  VBO01.Delete();
   EBO01.Delete();
   shader.Delete();
 
