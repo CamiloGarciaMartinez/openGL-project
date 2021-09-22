@@ -6,14 +6,14 @@ EBO::EBO(GLuint* vertices, GLsizeiptr size) {
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 }
 
-EBO::Bind() {
+void EBO::Bind() {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID);
 }
 
-EBO::Unbind() {
+void EBO::Unbind() {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-EBO::Delete() {
+void EBO::Delete() {
   glDeleteBuffers(1, &ID);
 }

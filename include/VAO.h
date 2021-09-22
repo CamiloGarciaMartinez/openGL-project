@@ -12,4 +12,4 @@ class VAO
     void Bind();
     void Unbind();
     void Delete();
-}
+};
