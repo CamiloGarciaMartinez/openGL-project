@@ -59,10 +59,10 @@ int main(int argc, char* argv[]) {
   // Set viewport
   glViewport(0, 0, 800, 800);
 
-  char* vertexShaderPath = "../resources/shaders/default.vert";
-  char* fragmentShaderPath = "../resources/shaders/default.frag";
+  std::string vertexShaderPath = "../resources/shaders/default.vert";
+  std::string fragmentShaderPath = "../resources/shaders/default.frag";
 
-  Shader shader(vertexShaderPath, fragmentShaderPath);
+  Shader shader(vertexShaderPath.c_str(), fragmentShaderPath.c_str());
   
 
 
