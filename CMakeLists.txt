@@ -49,6 +49,7 @@ target_link_libraries(${PROJECT_NAME} "VBO")
 # VAO -----------------------------
 add_library("VAO" "${INCLUDE_DIR}/VAO.h" "${INCLUDE_DIR}/VAO.cpp")
 target_include_directories("VAO" PRIVATE "${GLAD_DIR}/include")
+target_link_libraries("VBO" "VAO")
 target_link_libraries(${PROJECT_NAME} "VAO")
 
 # EBO -----------------------------

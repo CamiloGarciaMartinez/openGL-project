@@ -8,7 +8,7 @@ class VAO
     GLuint ID;
     VAO();
 
-    void LinkVAO(VBO VBO, GLuint layout);
+    void LinkVBO(VBO VBO, GLuint layout);
     void Bind();
     void Unbind();
     void Delete();
