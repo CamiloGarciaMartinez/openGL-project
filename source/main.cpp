@@ -69,19 +69,16 @@ int main(int argc, char* argv[]) {
 
 
   // Create and initilize Vertex Arrays Object ande Vertex Buffer Object (the order is important)
-  GLuint VAO;  // create references to the VAO and VBO
-  glGenVertexArrays(1, &VAO); // generate the VAO
-
-  glBindVertexArray(VAO); // bind the VAO to the current context
+  VAO VAO01;
+  VAO01.Bind();
 
   VBO VBO01(vertices, sizeof(vertices));
   EBO EBO01(squareIndices, sizeof(squareIndices));
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0); //  configure the VAO, this funtion help to  communicate with the shaders
-  glEnableVertexAttribArray(0);
+  VAO01.LinkVBO(VBO01, 0);
 
   VBO01.Unbind();
-  glBindVertexArray(0); // unbind the VAO
+  VAO01.Unbind(); 
   EBO01.Unbind();
 
 
@@ -96,7 +93,7 @@ int main(int argc, char* argv[]) {
     glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     shader.Activate();
-    glBindVertexArray(VAO);
+    VAO01.Bind();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 
@@ -106,7 +103,7 @@ int main(int argc, char* argv[]) {
   }
 
 
-  glDeleteVertexArrays(1, &VAO);
+  VAO01.Delete();
   VBO01.Delete();
   EBO01.Delete();
   shader.Delete();
