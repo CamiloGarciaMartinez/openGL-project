@@ -23,10 +23,10 @@ int main(int argc, char* argv[]) {
 
   // Vertices of the figuere we want to render
   GLfloat vertices[] = {
-    -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,  // bottom left vertice
-    0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // bottom right vertice
-    0.5f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // upper right vertice
-    -0.5f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // upper left vertice
+    -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,      0.8f, 0.3f, 0.02f,  // bottom left vertice
+     0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,      0.8f, 0.3f, 0.02f,  // bottom right vertice
+     0.5f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,   1.0f, 0.6f, 0.32f,  // upper right vertice
+    -0.5f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,   0.9f, 0.45f, 0.17f, // upper left vertice
 
     /*
     -0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, // inner left vertice
@@ -75,7 +75,8 @@ int main(int argc, char* argv[]) {
   VBO VBO01(vertices, sizeof(vertices));
   EBO EBO01(squareIndices, sizeof(squareIndices));
 
-  VAO01.LinkVBO(VBO01, 0);
+  VAO01.LinkAttrib(VBO01, 0, 4, GL_FLOAT, 6 * sizeof(float), (void*)0);
+  VAO01.LinkAttrib(VBO01, 1, 4, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
   VBO01.Unbind();
   VAO01.Unbind(); 
