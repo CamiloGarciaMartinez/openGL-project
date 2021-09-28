@@ -11,39 +11,33 @@
 #include "VAO.h"
 #include "EBO.h"
 
-
-
 int main(int argc, char* argv[]) {
   // Init GLFW and register openGL version/profile
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-
   // Vertices of the figuere we want to render
   GLfloat vertices[] = {
     -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,      0.8f, 0.3f, 0.02f,  // bottom left vertice
      0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,      0.8f, 0.3f, 0.02f,  // bottom right vertice
      0.5f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,   1.0f, 0.6f, 0.32f,  // upper right vertice
     -0.5f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f,   0.9f, 0.45f, 0.17f, // upper left vertice
-
-    /*
-    -0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, // inner left vertice
-    0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f,  // inner right vertice
-    0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f      // inner down vertice
-    */
   };
-
   GLuint indices[] = {
     0, 3, 5,  // lower left triangle
     3, 2, 4,  // lower right triangle
     5, 4, 1   // upper triangle
   };
-
   GLuint squareIndices[] = {
     0, 1, 2,
     0, 2, 3
+  };
+  GLfloat textureCoords[] = {
+    0.0f, 0.0f, // lower-left corner
+    1.0f, 0.0f, // lower-right corner
+    0.0f, 1.0f, // top-left corner
+    1.0f, 1.0   // top-right corner
   };
 
   // Create window, if failed terminate program
@@ -54,20 +48,15 @@ int main(int argc, char* argv[]) {
   }
   // Set current conxtext to window
   glfwMakeContextCurrent(window);
-
   // Init glad
   gladLoadGL();
-
   // Set viewport
   glViewport(0, 0, 800, 800);
 
+
   std::string vertexShaderPath = "../resources/shaders/default.vert";
   std::string fragmentShaderPath = "../resources/shaders/default.frag";
-
   Shader shader(vertexShaderPath.c_str(), fragmentShaderPath.c_str());
-  
-
-
   // Create and initilize Vertex Arrays Object ande Vertex Buffer Object (the order is important)
   VAO VAO01;
   VAO01.Bind();
@@ -102,14 +91,10 @@ int main(int argc, char* argv[]) {
     // Handle incomming events
     glfwPollEvents();
   }
-
-
   VAO01.Delete();
   VBO01.Delete();
   EBO01.Delete();
   shader.Delete();
-
-
   // Terminate program
   glfwDestroyWindow(window);
   glfwTerminate();
